@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>chase</title>
+    <title>Your Name</title>
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -117,38 +117,56 @@
 
         /* Music Player */
         .music-player {
-            background: var(--hover);
+            background: linear-gradient(135deg, var(--hover), #1a1a1a);
             border: 1px solid var(--border);
-            border-radius: 8px;
-            padding: 1.5rem;
+            border-radius: 12px;
+            padding: 2rem;
             margin-bottom: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .music-player::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--accent), transparent);
         }
 
         .player-controls {
             display: flex;
             align-items: center;
-            gap: 1rem;
-            margin-bottom: 1rem;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
         }
 
         .play-btn {
-            background: var(--accent);
+            background: linear-gradient(135deg, var(--accent), #4f46e5);
             border: none;
             border-radius: 50%;
-            width: 50px;
-            height: 50px;
+            width: 60px;
+            height: 60px;
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
             transition: all 0.3s ease;
             color: white;
-            font-size: 1.2rem;
+            font-size: 1.4rem;
+            position: relative;
+            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.2);
         }
 
         .play-btn:hover {
-            transform: scale(1.1);
-            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
+            transform: scale(1.05);
+            box-shadow: 0 6px 25px rgba(99, 102, 241, 0.4);
+        }
+
+        .play-btn:active {
+            transform: scale(0.95);
         }
 
         .track-info {
@@ -158,27 +176,53 @@
         .track-name {
             font-family: 'JetBrains Mono', monospace;
             color: var(--text);
-            font-size: 0.9rem;
+            font-size: 1rem;
+            margin-bottom: 0.25rem;
+            font-weight: 500;
         }
 
         .track-artist {
             color: var(--text-dim);
+            font-size: 0.85rem;
+        }
+
+        .volume-control {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--text-dim);
+            font-size: 0.9rem;
+        }
+
+        .progress-container {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            font-family: 'JetBrains Mono', monospace;
             font-size: 0.8rem;
+            color: var(--text-dim);
         }
 
         .progress-bar {
+            flex: 1;
             background: var(--border);
-            height: 4px;
-            border-radius: 2px;
+            height: 6px;
+            border-radius: 3px;
             overflow: hidden;
-            margin-top: 1rem;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .progress-bar:hover {
+            height: 8px;
         }
 
         .progress {
-            background: var(--accent);
+            background: linear-gradient(90deg, var(--accent), #4f46e5);
             height: 100%;
             width: 0%;
             transition: width 0.3s ease;
+            border-radius: 3px;
         }
 
         /* Projects */
@@ -251,7 +295,7 @@
 <body>
     <div class="container">
         <header>
-            <h1>your_name</h1>
+            <h1>chase</h1>
             <p class="subtitle">developer • creator • human</p>
             
             <nav>
@@ -268,16 +312,16 @@
             <section id="about" class="section active">
                 <h2>$ whoami</h2>
                 <p>
-                    Hey there! I'm a developer who loves building things that matter. 
-                    Currently focused on creating elegant solutions to complex problems.
+                    hey there! i'm a developer who loves building things that matter. 
+                    currently focused on creating elegant solutions to complex problems.
                 </p>
                 <p>
-                    When I'm not coding, you'll find me exploring new music, diving into 
+                    when i'm not coding, you'll find me exploring new music, diving into 
                     design systems, or probably overthinking the perfect font pairing 
-                    (spoiler: it's usually JetBrains Mono).
+                    (spoiler: it's usually jetbrains mono).
                 </p>
                 <p>
-                    I believe in clean code, minimalist design, and the power of 
+                    i believe in clean code, minimalist design, and the power of 
                     good typography to make everything better.
                 </p>
             </section>
@@ -289,18 +333,21 @@
                     <div class="player-controls">
                         <button class="play-btn" onclick="togglePlay()" id="playBtn">▶</button>
                         <div class="track-info">
-                            <div class="track-name" id="trackName">Loading...</div>
-                            <div class="track-artist" id="trackArtist">Searching for vibes...</div>
+                            <div class="track-name" id="trackName">connecting to spotify...</div>
+                            <div class="track-artist" id="trackArtist">loading your music</div>
                         </div>
+                        <div class="volume-control">🔊</div>
                     </div>
-                    <div class="progress-bar">
-                        <div class="progress" id="progress"></div>
+                    <div class="progress-container">
+                        <span id="currentTime">0:00</span>
+                        <div class="progress-bar" onclick="seekTo(event)">
+                            <div class="progress" id="progress"></div>
+                        </div>
+                        <span id="duration">0:00</span>
                     </div>
                 </div>
                 <p>
-                    Music shapes everything I create. From lo-fi beats while coding 
-                    to ambient soundscapes during design sessions, here's what's 
-                    currently inspiring my work.
+                    live from my spotify - what's currently shaping my creative process.
                 </p>
             </section>
 
@@ -359,55 +406,74 @@
             event.target.classList.add('active');
         }
 
-        // Music Player
-        let isPlaying = false;
-        let currentProgress = 0;
+        // Spotify Integration - Backend Approach
+        const YOUR_API_ENDPOINT = 'https://your-api.vercel.app/api/spotify'; // You'll deploy this
 
-        const tracks = [
-            { name: "midnight_thoughts.mp3", artist: "lo-fi dreams" },
-            { name: "coding_session.wav", artist: "focus beats" },
-            { name: "rain_on_window.flac", artist: "ambient space" },
-            { name: "synthwave_sunset.mp3", artist: "retro vibes" }
-        ];
-
-        let currentTrack = 0;
-
-        function updateTrackInfo() {
-            document.getElementById('trackName').textContent = tracks[currentTrack].name;
-            document.getElementById('trackArtist').textContent = tracks[currentTrack].artist;
-        }
-
-        function togglePlay() {
-            const playBtn = document.getElementById('playBtn');
-            const progress = document.getElementById('progress');
-            
-            if (!isPlaying) {
-                playBtn.textContent = '⏸';
-                isPlaying = true;
-                // Simulate progress
-                const progressInterval = setInterval(() => {
-                    currentProgress += 1;
-                    progress.style.width = currentProgress + '%';
-                    
-                    if (currentProgress >= 100) {
-                        clearInterval(progressInterval);
-                        nextTrack();
-                    }
-                }, 100);
-            } else {
-                playBtn.textContent = '▶';
-                isPlaying = false;
+        async function getCurrentlyPlaying() {
+            try {
+                const response = await fetch(YOUR_API_ENDPOINT);
+                const data = await response.json();
+                
+                if (data.isPlaying || data.lastPlayed) {
+                    updateTrackDisplay(data);
+                } else {
+                    showNoMusic();
+                }
+            } catch (error) {
+                console.error('Error fetching music data:', error);
+                showOffline();
             }
         }
 
-        function nextTrack() {
-            currentTrack = (currentTrack + 1) % tracks.length;
-            currentProgress = 0;
-            document.getElementById('progress').style.width = '0%';
-            document.getElementById('playBtn').textContent = '▶';
-            isPlaying = false;
-            updateTrackInfo();
+        function updateTrackDisplay(data) {
+            const track = data.isPlaying ? data.currentTrack : data.lastPlayed;
+            
+            document.getElementById('trackName').textContent = track.name;
+            document.getElementById('trackArtist').textContent = track.artists.join(', ');
+            
+            if (data.isPlaying) {
+                // Show live progress
+                const progress = (data.progress / track.duration) * 100;
+                document.getElementById('progress').style.width = progress + '%';
+                document.getElementById('currentTime').textContent = formatTime(data.progress);
+                document.getElementById('playBtn').textContent = '⏸';
+            } else {
+                // Show last played (no progress)
+                document.getElementById('progress').style.width = '0%';
+                document.getElementById('currentTime').textContent = 'last played';
+                document.getElementById('playBtn').textContent = '▶';
+            }
+            
+            document.getElementById('duration').textContent = formatTime(track.duration);
         }
+
+        function showNoMusic() {
+            document.getElementById('trackName').textContent = 'no recent activity';
+            document.getElementById('trackArtist').textContent = 'play something on spotify';
+            document.getElementById('progress').style.width = '0%';
+            document.getElementById('currentTime').textContent = '0:00';
+            document.getElementById('duration').textContent = '0:00';
+            document.getElementById('playBtn').textContent = '▶';
+        }
+
+        function showOffline() {
+            document.getElementById('trackName').textContent = 'connection error';
+            document.getElementById('trackArtist').textContent = 'spotify api offline';
+        }
+
+        function formatTime(ms) {
+            const minutes = Math.floor(ms / 60000);
+            const seconds = ((ms % 60000) / 1000).toFixed(0);
+            return minutes + ':' + (seconds < 10 ? '0' : '') + seconds;
+        }
+
+        function togglePlay() {
+            // Just refresh the data since we can't control playback from frontend
+            getCurrentlyPlaying();
+        }
+
+        // Update every 30 seconds
+        setInterval(getCurrentlyPlaying, 30000);
 
         // Project links - replace these URLs with your actual GitHub markdown files
         function openProject(projectId) {
@@ -422,10 +488,10 @@
         }
 
         // Initialize
-        updateTrackInfo();
-
-        // Add some smooth scrolling and animations
         document.addEventListener('DOMContentLoaded', function() {
+            // Start fetching music data
+            getCurrentlyPlaying();
+            
             // Simulate typing effect for the title
             const title = document.querySelector('h1');
             const originalText = title.textContent;
