@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Name</title>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0f0f0f;
+            --text: #e4e4e4;
+            --text-dim: #a1a1a1;
+            --accent: #6366f1;
+            --border: #262626;
+            --hover: #1a1a1a;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+            min-height: 100vh;
+        }
+
+        /* Header */
+        header {
+            margin-bottom: 4rem;
+            padding: 2rem 0;
+        }
+
+        h1 {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 2.5rem;
+            font-weight: 300;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(135deg, var(--text), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .subtitle {
+            color: var(--text-dim);
+            font-size: 1.1rem;
+            font-weight: 300;
+        }
+
+        /* Navigation */
+        nav {
+            margin: 2rem 0;
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            gap: 2rem;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        nav a {
+            color: var(--text-dim);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.3s ease;
+            cursor: pointer;
+        }
+
+        nav a:hover, nav a.active {
+            color: var(--accent);
+        }
+
+        /* Sections */
+        section {
+            margin-bottom: 4rem;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 0.6s ease forwards;
+        }
+
+        section:nth-child(2) { animation-delay: 0.1s; }
+        section:nth-child(3) { animation-delay: 0.2s; }
+        section:nth-child(4) { animation-delay: 0.3s; }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        h2 {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.5rem;
+            font-weight: 400;
+            margin-bottom: 1.5rem;
+            color: var(--text);
+        }
+
+        p {
+            color: var(--text-dim);
+            margin-bottom: 1rem;
+        }
+
+        /* Music Player */
+        .music-player {
+            background: var(--hover);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .player-controls {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .play-btn {
+            background: var(--accent);
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: white;
+            font-size: 1.2rem;
+        }
+
+        .play-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
+        }
+
+        .track-info {
+            flex: 1;
+        }
+
+        .track-name {
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--text);
+            font-size: 0.9rem;
+        }
+
+        .track-artist {
+            color: var(--text-dim);
+            font-size: 0.8rem;
+        }
+
+        .progress-bar {
+            background: var(--border);
+            height: 4px;
+            border-radius: 2px;
+            overflow: hidden;
+            margin-top: 1rem;
+        }
+
+        .progress {
+            background: var(--accent);
+            height: 100%;
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        /* Projects */
+        .project {
+            background: var(--hover);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .project:hover {
+            border-color: var(--accent);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        .project h3 {
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--text);
+            margin-bottom: 0.5rem;
+            font-size: 1.1rem;
+        }
+
+        .project-desc {
+            color: var(--text-dim);
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .project-tech {
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--accent);
+            font-size: 0.8rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            .container {
+                padding: 1rem;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            nav ul {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .player-controls {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+
+        /* Hidden sections */
+        .section {
+            display: none;
+        }
+
+        .section.active {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>your_name</h1>
+            <p class="subtitle">developer • creator • human</p>
+            
+            <nav>
+                <ul>
+                    <li><a href="#" onclick="showSection('about')" class="nav-link active">about</a></li>
+                    <li><a href="#" onclick="showSection('music')" class="nav-link">music</a></li>
+                    <li><a href="#" onclick="showSection('work')" class="nav-link">work</a></li>
+                </ul>
+            </nav>
+        </header>
+
+        <main>
+            <!-- About Section -->
+            <section id="about" class="section active">
+                <h2>$ whoami</h2>
+                <p>
+                    Hey there! I'm a developer who loves building things that matter. 
+                    Currently focused on creating elegant solutions to complex problems.
+                </p>
+                <p>
+                    When I'm not coding, you'll find me exploring new music, diving into 
+                    design systems, or probably overthinking the perfect font pairing 
+                    (spoiler: it's usually JetBrains Mono).
+                </p>
+                <p>
+                    I believe in clean code, minimalist design, and the power of 
+                    good typography to make everything better.
+                </p>
+            </section>
+
+            <!-- Music Section -->
+            <section id="music" class="section">
+                <h2>$ now_playing</h2>
+                <div class="music-player">
+                    <div class="player-controls">
+                        <button class="play-btn" onclick="togglePlay()" id="playBtn">▶</button>
+                        <div class="track-info">
+                            <div class="track-name" id="trackName">Loading...</div>
+                            <div class="track-artist" id="trackArtist">Searching for vibes...</div>
+                        </div>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress" id="progress"></div>
+                    </div>
+                </div>
+                <p>
+                    Music shapes everything I create. From lo-fi beats while coding 
+                    to ambient soundscapes during design sessions, here's what's 
+                    currently inspiring my work.
+                </p>
+            </section>
+
+            <!-- Work Section -->
+            <section id="work" class="section">
+                <h2>$ ls projects/</h2>
+                
+                <div class="project" onclick="openProject('project1')">
+                    <h3>minimal-ui-kit</h3>
+                    <p class="project-desc">
+                        A collection of clean, accessible React components built with TypeScript and Tailwind.
+                    </p>
+                    <p class="project-tech">react • typescript • tailwind • storybook</p>
+                </div>
+
+                <div class="project" onclick="openProject('project2')">
+                    <h3>dotfiles</h3>
+                    <p class="project-desc">
+                        My carefully curated development environment setup. Terminal, vim, and workflow configs.
+                    </p>
+                    <p class="project-tech">zsh • neovim • tmux • alacritty</p>
+                </div>
+
+                <div class="project" onclick="openProject('project3')">
+                    <h3>markdown-blog-engine</h3>
+                    <p class="project-desc">
+                        Static site generator that transforms markdown into beautiful, fast-loading blog posts.
+                    </p>
+                    <p class="project-tech">node.js • markdown • sass • github-actions</p>
+                </div>
+
+                <div class="project" onclick="openProject('project4')">
+                    <h3>color-palette-generator</h3>
+                    <p class="project-desc">
+                        Generate accessible color schemes for your next project with a11y compliance built-in.
+                    </p>
+                    <p class="project-tech">javascript • canvas • wcag • pwa</p>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        // Navigation
+        function showSection(sectionName) {
+            // Hide all sections
+            const sections = document.querySelectorAll('.section');
+            sections.forEach(section => section.classList.remove('active'));
+            
+            // Show selected section
+            document.getElementById(sectionName).classList.add('active');
+            
+            // Update nav
+            const navLinks = document.querySelectorAll('.nav-link');
+            navLinks.forEach(link => link.classList.remove('active'));
+            event.target.classList.add('active');
+        }
+
+        // Music Player
+        let isPlaying = false;
+        let currentProgress = 0;
+
+        const tracks = [
+            { name: "midnight_thoughts.mp3", artist: "lo-fi dreams" },
+            { name: "coding_session.wav", artist: "focus beats" },
+            { name: "rain_on_window.flac", artist: "ambient space" },
+            { name: "synthwave_sunset.mp3", artist: "retro vibes" }
+        ];
+
+        let currentTrack = 0;
+
+        function updateTrackInfo() {
+            document.getElementById('trackName').textContent = tracks[currentTrack].name;
+            document.getElementById('trackArtist').textContent = tracks[currentTrack].artist;
+        }
+
+        function togglePlay() {
+            const playBtn = document.getElementById('playBtn');
+            const progress = document.getElementById('progress');
+            
+            if (!isPlaying) {
+                playBtn.textContent = '⏸';
+                isPlaying = true;
+                // Simulate progress
+                const progressInterval = setInterval(() => {
+                    currentProgress += 1;
+                    progress.style.width = currentProgress + '%';
+                    
+                    if (currentProgress >= 100) {
+                        clearInterval(progressInterval);
+                        nextTrack();
+                    }
+                }, 100);
+            } else {
+                playBtn.textContent = '▶';
+                isPlaying = false;
+            }
+        }
+
+        function nextTrack() {
+            currentTrack = (currentTrack + 1) % tracks.length;
+            currentProgress = 0;
+            document.getElementById('progress').style.width = '0%';
+            document.getElementById('playBtn').textContent = '▶';
+            isPlaying = false;
+            updateTrackInfo();
+        }
+
+        // Project links - replace these URLs with your actual GitHub markdown files
+        function openProject(projectId) {
+            const projectUrls = {
+                'project1': 'https://github.com/yourusername/minimal-ui-kit/blob/main/README.md',
+                'project2': 'https://github.com/yourusername/dotfiles/blob/main/README.md',
+                'project3': 'https://github.com/yourusername/markdown-blog-engine/blob/main/README.md',
+                'project4': 'https://github.com/yourusername/color-palette-generator/blob/main/README.md'
+            };
+            
+            window.open(projectUrls[projectId], '_blank');
+        }
+
+        // Initialize
+        updateTrackInfo();
+
+        // Add some smooth scrolling and animations
+        document.addEventListener('DOMContentLoaded', function() {
+            // Simulate typing effect for the title
+            const title = document.querySelector('h1');
+            const originalText = title.textContent;
+            title.textContent = '';
+            
+            let i = 0;
+            const typeWriter = setInterval(() => {
+                if (i < originalText.length) {
+                    title.textContent += originalText.charAt(i);
+                    i++;
+                } else {
+                    clearInterval(typeWriter);
+                }
+            }, 100);
+        });
+    </script>
+</body>
+</html>
