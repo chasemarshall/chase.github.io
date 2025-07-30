@@ -115,7 +115,6 @@
             margin-bottom: 1rem;
         }
 
-        /* Music Player */
         .music-player {
             background: linear-gradient(135deg, var(--hover), #1a1a1a);
             border: 1px solid var(--border);
@@ -141,6 +140,32 @@
             align-items: center;
             gap: 1.5rem;
             margin-bottom: 1.5rem;
+        }
+
+        .album-art {
+            width: 80px;
+            height: 80px;
+            border-radius: 8px;
+            object-fit: cover;
+            border: 2px solid var(--border);
+            transition: all 0.3s ease;
+        }
+
+        .album-art:hover {
+            border-color: var(--accent);
+            transform: scale(1.05);
+        }
+
+        .album-art-placeholder {
+            width: 80px;
+            height: 80px;
+            border-radius: 8px;
+            background: var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-dim);
+            font-size: 2rem;
         }
 
         .play-btn {
@@ -179,6 +204,12 @@
             font-size: 1rem;
             margin-bottom: 0.25rem;
             font-weight: 500;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .track-name:hover {
+            color: var(--accent);
         }
 
         .track-artist {
@@ -221,8 +252,13 @@
             background: linear-gradient(90deg, var(--accent), #4f46e5);
             height: 100%;
             width: 0%;
-            transition: width 0.3s ease;
+            transition: width 0.1s ease;
             border-radius: 3px;
+        }
+
+        /* Audio element (hidden) */
+        #audioPlayer {
+            display: none;
         }
 
         /* Projects */
@@ -331,9 +367,10 @@
                 <h2>$ now_playing</h2>
                 <div class="music-player">
                     <div class="player-controls">
+                        <div id="albumArt" class="album-art-placeholder">🎵</div>
                         <button class="play-btn" onclick="togglePlay()" id="playBtn">▶</button>
                         <div class="track-info">
-                            <div class="track-name" id="trackName">connecting to spotify...</div>
+                            <div class="track-name" id="trackName" onclick="openInSpotify()">connecting to spotify...</div>
                             <div class="track-artist" id="trackArtist">loading your music</div>
                         </div>
                         <div class="volume-control">🔊</div>
@@ -346,9 +383,14 @@
                         <span id="duration">0:00</span>
                     </div>
                 </div>
+                
+                <!-- Hidden audio player for 30-second previews -->
+                <audio id="audioPlayer" preload="none">
+                    <source id="audioSource" src="" type="audio/mpeg">
+                </audio>
                 <p>
-                    live from my spotify - click track names to open in spotify, 
-                    or use the player controls to interact with your music.
+                    live from my spotify - click play to hear 30-second previews, 
+                    or click track names to open full songs in spotify.
                 </p>
             </section>
 
