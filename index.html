@@ -570,12 +570,18 @@
         }
 
         // Spotify Integration
-        const SPOTIFY_API_ENDPOINT = 'https://spotify-ozuyecnyn-bennetts-projects-3192ee3a.vercel.app/api/spotify';
+        const SPOTIFY_API_ENDPOINT = 'https://spotify-api-git-main-bennetts-projects-3192ee3a.vercel.app/api/spotify';
 
         async function getCurrentlyPlaying() {
             try {
                 const response = await fetch(SPOTIFY_API_ENDPOINT);
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
                 const data = await response.json();
+                console.log('Spotify API response:', data); // Debug log
                 
                 if (data.currentTrack || data.lastPlayed) {
                     currentTrackData = data;
@@ -584,7 +590,7 @@
                     // Try auto-play on first load
                     if (!hasUserInteracted && (data.currentTrack || data.lastPlayed)) {
                         const track = data.currentTrack || data.lastPlayed;
-                        if (track.previewUrl) {
+                        if (track && track.previewUrl) {
                             attemptAutoPlay(track);
                         }
                     }
@@ -655,6 +661,11 @@
         function updateTrackDisplay(data) {
             const track = data.currentTrack || data.lastPlayed;
             
+            if (!track) {
+                showNoMusic();
+                return;
+            }
+            
             // Update main player
             document.getElementById('trackName').textContent = track.name;
             document.getElementById('trackArtist').textContent = track.artists.join(', ');
@@ -681,6 +692,13 @@
             
             // Update duration
             document.getElementById('duration').textContent = formatTime(track.duration);
+            
+            // If currently playing, show progress
+            if (data.isPlaying && data.progress) {
+                const progressPercent = (data.progress / track.duration) * 100;
+                document.getElementById('progress').style.width = progressPercent + '%';
+                document.getElementById('currentTime').textContent = formatTime(data.progress);
+            }
             
             // Update audio source if needed
             if (track.previewUrl && audioPlayer.src !== track.previewUrl && hasUserInteracted) {
