@@ -481,12 +481,23 @@
                     </div>
                 </div>
                 
-                <!-- Hidden audio player for 30-second previews -->
+                <!-- Spotify Embed Container -->
+                <div id="spotifyEmbed" style="display: none; margin-top: 1rem;">
+                    <iframe id="spotifyPlayer" 
+                            style="border-radius: 12px; width: 100%; height: 152px;" 
+                            frameborder="0" 
+                            allowfullscreen="" 
+                            allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" 
+                            loading="lazy">
+                    </iframe>
+                </div>
+                
+                <!-- Hidden audio player for previews (when available) -->
                 <audio id="audioPlayer" preload="none" loop>
                     <source id="audioSource" src="" type="audio/mpeg">
                 </audio>
-                <p>
-                    this is what i'm vibing to right now - click play to hear a preview, 
+                <p id="musicDescription">
+                    this is what i'm vibing to right now - click play to hear it embedded, 
                     or click the track name to open in spotify.
                 </p>
             </section>
@@ -685,9 +696,10 @@
                 img.src = track.albumArt;
             }
             
-            // Store track URL
+            // Store track URL and ID
             if (currentTrackData) {
                 currentTrackData.trackUrl = track.url;
+                currentTrackData.trackId = track.id;
             }
             
             // Update duration
@@ -700,13 +712,15 @@
                 document.getElementById('currentTime').textContent = formatTime(data.progress);
             }
             
-            // Update audio source if needed
-            if (track.previewUrl && audioPlayer.src !== track.previewUrl && hasUserInteracted) {
-                const wasPlaying = isPlaying;
+            // Set up Spotify embed URL
+            if (track.id) {
+                const embedUrl = `https://open.spotify.com/embed/track/${track.id}?utm_source=generator&theme=0`;
+                document.getElementById('spotifyPlayer').src = embedUrl;
+            }
+            
+            // Update audio source if preview URL exists (rare)
+            if (track.previewUrl && audioPlayer.src !== track.previewUrl) {
                 audioPlayer.src = track.previewUrl;
-                if (wasPlaying) {
-                    audioPlayer.play();
-                }
             }
         }
 
@@ -741,28 +755,42 @@
             
             const track = currentTrackData.currentTrack || currentTrackData.lastPlayed;
             
-            if (!track || !track.previewUrl) {
-                openInSpotify();
-                return;
-            }
+            if (!track) return;
             
             hasUserInteracted = true;
             
-            if (isPlaying) {
-                audioPlayer.pause();
-                isPlaying = false;
-                document.getElementById('playBtn').textContent = '▶';
-            } else {
-                if (audioPlayer.src !== track.previewUrl) {
-                    audioPlayer.src = track.previewUrl;
+            // If we have a preview URL, use the audio player
+            if (track.previewUrl) {
+                if (isPlaying) {
+                    audioPlayer.pause();
+                    isPlaying = false;
+                    document.getElementById('playBtn').textContent = '▶';
+                } else {
+                    if (audioPlayer.src !== track.previewUrl) {
+                        audioPlayer.src = track.previewUrl;
+                    }
+                    try {
+                        await audioPlayer.play();
+                        isPlaying = true;
+                        document.getElementById('playBtn').textContent = '⏸';
+                        startProgressAnimation();
+                    } catch (error) {
+                        console.error('Playback error:', error);
+                    }
                 }
-                try {
-                    await audioPlayer.play();
-                    isPlaying = true;
+            } else {
+                // No preview URL, toggle Spotify embed
+                const embedContainer = document.getElementById('spotifyEmbed');
+                if (embedContainer.style.display === 'none') {
+                    embedContainer.style.display = 'block';
                     document.getElementById('playBtn').textContent = '⏸';
-                    startProgressAnimation();
-                } catch (error) {
-                    console.error('Playback error:', error);
+                    document.getElementById('musicDescription').textContent = 
+                        'spotify player embedded below - click the track name to open in spotify app';
+                } else {
+                    embedContainer.style.display = 'none';
+                    document.getElementById('playBtn').textContent = '▶';
+                    document.getElementById('musicDescription').textContent = 
+                        'this is what i\'m vibing to right now - click play to hear it embedded, or click the track name to open in spotify.';
                 }
             }
         }
