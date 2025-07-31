@@ -180,6 +180,7 @@
             margin-bottom: 2rem;
             position: relative;
             overflow: hidden;
+            font-family: 'JetBrains Mono', 'Courier New', monospace;
         }
 
         .music-player::before {
@@ -206,8 +207,22 @@
         .player-controls {
             display: flex;
             align-items: center;
-            gap: 1.5rem;
-            margin-bottom: 1.5rem;
+            justify-content: space-between;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .track-meta {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .track-controls {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
         }
 
         .album-art {
@@ -285,10 +300,6 @@
             font-size: 0.85rem;
         }
 
-        .track-navigation {
-            display: flex;
-            gap: 0.5rem;
-        }
 
         .nav-btn {
             background: var(--hover);
@@ -456,6 +467,10 @@
                 align-items: flex-start;
             }
 
+            .track-controls {
+                margin-top: 1rem;
+            }
+
             .floating-music {
                 bottom: 1rem;
                 right: 1rem;
@@ -472,6 +487,7 @@
             display: block;
         }
     </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jsmediatags/3.9.5/jsmediatags.min.js"></script>
 </head>
 <body>
     <div class="container">
@@ -511,15 +527,21 @@
                 <h2>$ now_playing</h2>
                 <div class="music-player">
                     <div class="player-controls">
-                        <div id="albumArtContainer" class="album-art-placeholder">🎵</div>
-                        <button class="play-btn" onclick="togglePlay()" id="playBtn">▶</button>
-                        <div class="track-info">
-                            <div class="track-name" id="trackName">loading playlist...</div>
-                            <div class="track-artist" id="trackArtist">chase's favorites</div>
+                        <div class="track-meta">
+                            <div id="albumArtContainer" class="album-art-placeholder">🎵</div>
+                            <div class="track-info">
+                                <div class="track-name" id="trackName">loading playlist...</div>
+                                <div class="track-artist" id="trackArtist">chase's favorites</div>
+                            </div>
                         </div>
-                        <div class="track-navigation">
+                        <div class="track-controls">
                             <button class="nav-btn" onclick="previousTrack()">⏮</button>
+                            <button class="play-btn" onclick="togglePlay()" id="playBtn">▶</button>
                             <button class="nav-btn" onclick="nextTrack()">⏭</button>
+                            <div class="volume-control">
+                                <span>vol</span>
+                                <input type="range" id="volumeSlider" class="volume-slider" min="0" max="1" step="0.01" value="1">
+                            </div>
                         </div>
                     </div>
                     <div class="progress-container">
@@ -528,10 +550,6 @@
                             <div class="progress" id="progress"></div>
                         </div>
                         <span id="duration">0:00</span>
-                    </div>
-                    <div class="volume-control">
-                        <span>vol</span>
-                        <input type="range" id="volumeSlider" class="volume-slider" min="0" max="1" step="0.01" value="1">
                     </div>
                 </div>
                 <audio id="audioPlayer" preload="metadata"></audio>
@@ -624,9 +642,7 @@
             const track = playlist[index];
             document.getElementById('trackName').textContent = track.name;
             document.getElementById('trackArtist').textContent = track.artist;
-            document.getElementById('albumArtContainer').innerHTML = track.albumArt
-                ? `<img src="${track.albumArt}" class="album-art" alt="Album Art">`
-                : '🎵';
+            loadAlbumArt(track);
             audioPlayer.src = track.file;
             audioPlayer.load();
             document.getElementById('playBtn').textContent = '▶';
@@ -636,6 +652,32 @@
             document.getElementById('currentTime').textContent = '0:00';
             document.getElementById('progress').style.width = '0%';
             document.getElementById('floatingText').textContent = `♪ ${track.name}`;
+        }
+
+        function loadAlbumArt(track) {
+            const container = document.getElementById('albumArtContainer');
+            if (track.albumArt) {
+                container.innerHTML = `<img src="${track.albumArt}" class="album-art" alt="Album Art">`;
+                return;
+            }
+            jsmediatags.read(track.file, {
+                onSuccess: function(result) {
+                    const picture = result.tags.picture;
+                    if (picture) {
+                        let base64String = '';
+                        for (let i = 0; i < picture.data.length; i++) {
+                            base64String += String.fromCharCode(picture.data[i]);
+                        }
+                        const base64 = `data:${picture.format};base64,${btoa(base64String)}`;
+                        container.innerHTML = `<img src="${base64}" class="album-art" alt="Album Art">`;
+                    } else {
+                        container.textContent = '🎵';
+                    }
+                },
+                onError: function() {
+                    container.textContent = '🎵';
+                }
+            });
         }
 
         function nextTrack(autoPlay = false) {
