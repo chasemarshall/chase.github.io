@@ -424,30 +424,32 @@
                 <div class="music-player">
                     <div class="player-controls">
                         <div id="albumArtContainer" class="album-art-placeholder">🎵</div>
+                        <button class="play-btn" onclick="togglePlay()" id="playBtn">▶</button>
                         <div class="track-info">
-                            <div class="track-name" id="trackName" onclick="openInSpotify()">connecting to spotify...</div>
-                            <div class="track-artist" id="trackArtist">loading your music</div>
+                            <div class="track-name" id="trackName">loading playlist...</div>
+                            <div class="track-artist" id="trackArtist">chase's favorites</div>
                         </div>
                         <div class="track-navigation">
                             <button class="nav-btn" onclick="previousTrack()">◀</button>
                             <button class="nav-btn" onclick="nextTrack()">▶</button>
                         </div>
                     </div>
+                    <div class="progress-container">
+                        <span id="currentTime">0:00</span>
+                        <div class="progress-bar" onclick="seekTo(event)">
+                            <div class="progress" id="progress"></div>
+                        </div>
+                        <span id="duration">0:00</span>
+                    </div>
                 </div>
                 
-                <!-- Spotify Embed Container -->
-                <div id="spotifyEmbed" style="margin-top: 1rem;">
-                    <iframe id="spotifyPlayer" 
-                            style="border-radius: 12px; width: 100%; height: 152px;" 
-                            frameborder="0" 
-                            allowfullscreen="" 
-                            allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" 
-                            loading="lazy">
-                    </iframe>
-                </div>
+                <!-- Native audio player (hidden) -->
+                <audio id="audioPlayer" preload="metadata">
+                    <source id="audioSource" src="" type="audio/mpeg">
+                </audio>
                 
                 <p id="musicDescription">
-                    my favorite tracks - use the arrows to skip through my playlist
+                    my favorite tracks - click play or use arrows to explore
                 </p>
             </section>
 
@@ -816,8 +818,8 @@
 
         // Initialize
         document.addEventListener('DOMContentLoaded', function() {
-            // Start fetching music data
-            getCurrentlyPlaying();
+            // Initialize the music player
+            initPlayer();
             
             // Simulate typing effect for the title
             const title = document.querySelector('h1');
