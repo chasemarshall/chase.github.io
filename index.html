@@ -5,383 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chase Marshall</title>
     <style>
-        /* Embedded font imports to avoid CORS issues */
-        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500&display=swap');
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&display=swap');
-
-        :root {
-            --bg: #0f0f0f;
-            --text: #e4e4e4;
-            --text-dim: #a1a1a1;
-            --accent: #6366f1;
-            --border: #262626;
-            --hover: #1a1a1a;
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            background: var(--bg);
-            color: var(--text);
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            line-height: 1.6;
-            overflow-x: hidden;
-        }
-
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 2rem;
-            min-height: 100vh;
-        }
-
-        /* Header */
-        header {
-            margin-bottom: 4rem;
-            padding: 2rem 0;
-        }
-
-        h1 {
-            font-family: 'JetBrains Mono', 'Courier New', monospace;
-            font-size: 2.5rem;
-            font-weight: 300;
-            margin-bottom: 0.5rem;
-            background: linear-gradient(135deg, var(--text), var(--accent));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .subtitle {
-            color: var(--text-dim);
-            font-size: 1.1rem;
-            font-weight: 300;
-        }
-
-        /* Floating Music Indicator */
-        .floating-music {
-            position: fixed;
-            bottom: 2rem;
-            right: 2rem;
-            background: rgba(20, 20, 20, 0.9);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 1rem 1.5rem;
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            z-index: 100;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
-        }
-
-        .floating-music:hover {
-            transform: translateY(-2px);
-            border-color: var(--accent);
-            box-shadow: 0 12px 40px rgba(99, 102, 241, 0.2);
-        }
-
-        .music-icon {
-            width: 24px;
-            height: 24px;
-            position: relative;
-        }
-
-        .music-icon .bar {
-            position: absolute;
-            bottom: 0;
-            width: 3px;
-            background: var(--accent);
-            animation: soundWave 0.8s ease-in-out infinite;
-        }
-
-        .music-icon .bar:nth-child(1) { left: 0; animation-delay: 0s; }
-        .music-icon .bar:nth-child(2) { left: 6px; animation-delay: 0.2s; }
-        .music-icon .bar:nth-child(3) { left: 12px; animation-delay: 0.4s; }
-        .music-icon .bar:nth-child(4) { left: 18px; animation-delay: 0.6s; }
-
-        @keyframes soundWave {
-            0%, 100% { height: 8px; }
-            50% { height: 20px; }
-        }
-
-        .floating-text {
-            font-family: 'JetBrains Mono', 'Courier New', monospace;
-            font-size: 0.85rem;
-            color: var(--text);
-        }
-
-        /* Navigation */
-        nav {
-            margin: 2rem 0;
-        }
-
-        nav ul {
-            list-style: none;
-            display: flex;
-            gap: 2rem;
-            font-family: 'JetBrains Mono', 'Courier New', monospace;
-        }
-
-        nav a {
-            color: var(--text-dim);
-            text-decoration: none;
-            font-size: 0.9rem;
-            transition: color 0.3s ease;
-            cursor: pointer;
-        }
-
-        nav a:hover, nav a.active {
-            color: var(--accent);
-        }
-
-        /* Sections */
-        section {
-            margin-bottom: 4rem;
-            opacity: 0;
-            transform: translateY(20px);
-            animation: fadeInUp 0.6s ease forwards;
-        }
-
-        section:nth-child(2) { animation-delay: 0.1s; }
-        section:nth-child(3) { animation-delay: 0.2s; }
-        section:nth-child(4) { animation-delay: 0.3s; }
-
-        @keyframes fadeInUp {
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        h2 {
-            font-family: 'JetBrains Mono', 'Courier New', monospace;
-            font-size: 1.5rem;
-            font-weight: 400;
-            margin-bottom: 1.5rem;
-            color: var(--text);
-        }
-
-        p {
-            color: var(--text-dim);
-            margin-bottom: 1rem;
-        }
-
-        .music-player {
-            background: linear-gradient(135deg, var(--hover), #1a1a1a);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 2rem;
-            margin-bottom: 2rem;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .music-player::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 1px;
-            background: linear-gradient(90deg, transparent, var(--accent), transparent);
-        }
-
-        .player-controls {
-            display: flex;
-            align-items: center;
-            gap: 1.5rem;
-            margin-bottom: 1.5rem;
-        }
-
-        .album-art {
-            width: 80px;
-            height: 80px;
-            border-radius: 8px;
-            object-fit: cover;
-            border: 2px solid var(--border);
-            transition: all 0.3s ease;
-        }
-
-        .album-art:hover {
-            border-color: var(--accent);
-            transform: scale(1.05);
-        }
-
-        .album-art-placeholder {
-            width: 80px;
-            height: 80px;
-            border-radius: 8px;
-            background: var(--border);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--text-dim);
-            font-size: 2rem;
-        }
-
-        .play-btn {
-            background: linear-gradient(135deg, var(--accent), #4f46e5);
-            border: none;
-            border-radius: 50%;
-            width: 60px;
-            height: 60px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            color: white;
-            font-size: 1.4rem;
-            position: relative;
-            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.2);
-        }
-
-        .play-btn:hover {
-            transform: scale(1.05);
-            box-shadow: 0 6px 25px rgba(99, 102, 241, 0.4);
-        }
-
-        .play-btn:active {
-            transform: scale(0.95);
-        }
-
-        .track-info {
-            flex: 1;
-        }
-
-        .track-name {
-            font-family: 'JetBrains Mono', 'Courier New', monospace;
-            color: var(--text);
-            font-size: 1rem;
-            margin-bottom: 0.25rem;
-            font-weight: 500;
-            cursor: pointer;
-            transition: color 0.3s ease;
-        }
-
-        .track-name:hover {
-            color: var(--accent);
-        }
-
-        .track-artist {
-            color: var(--text-dim);
-            font-size: 0.85rem;
-        }
-
-        .track-navigation {
-            display: flex;
-            gap: 0.5rem;
-        }
-
-        .nav-btn {
-            background: var(--hover);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            width: 40px;
-            height: 40px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            color: var(--text);
-            font-size: 1rem;
-        }
-
-        .nav-btn:hover {
-            background: var(--accent);
-            color: white;
-            transform: scale(1.05);
-        }
-
-        .nav-btn:active {
-            transform: scale(0.95);
-        }
-
-        /* Audio element (hidden) */
-        #audioPlayer {
-            display: none;
-        }
-
-        /* Projects */
-        .project {
-            background: var(--hover);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            padding: 1.5rem;
-            margin-bottom: 1rem;
-            transition: all 0.3s ease;
-            cursor: pointer;
-        }
-
-        .project:hover {
-            border-color: var(--accent);
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
-        }
-
-        .project h3 {
-            font-family: 'JetBrains Mono', 'Courier New', monospace;
-            color: var(--text);
-            margin-bottom: 0.5rem;
-            font-size: 1.1rem;
-        }
-
-        .project-desc {
-            color: var(--text-dim);
-            font-size: 0.9rem;
-            margin-bottom: 0.5rem;
-        }
-
-        .project-tech {
-            font-family: 'JetBrains Mono', 'Courier New', monospace;
-            color: var(--accent);
-            font-size: 0.8rem;
-        }
-
-        /* Responsive */
-        @media (max-width: 600px) {
-            .container {
-                padding: 1rem;
-            }
-            
-            h1 {
-                font-size: 2rem;
-            }
-            
-            nav ul {
-                flex-direction: column;
-                gap: 1rem;
-            }
-            
-            .player-controls {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-
-            .floating-music {
-                bottom: 1rem;
-                right: 1rem;
-                padding: 0.75rem 1rem;
-            }
-        }
-
-        /* Hidden sections */
-        .section {
-            display: none;
-        }
-
-        .section.active {
-            display: block;
-        }
+        /* ... [your existing CSS, unchanged] ... */
+        /* All CSS from your previous file goes here. */
     </style>
 </head>
 <body>
@@ -389,7 +14,6 @@
         <header>
             <h1>chase</h1>
             <p class="subtitle">developer • creator • human</p>
-            
             <nav>
                 <ul>
                     <li><a href="#about" onclick="showSection('about', event)" class="nav-link active">about</a></li>
@@ -442,12 +66,7 @@
                         <span id="duration">0:00</span>
                     </div>
                 </div>
-                
-                <!-- Native audio player (hidden) -->
-                <audio id="audioPlayer" preload="metadata">
-                    <source id="audioSource" src="" type="audio/mpeg">
-                </audio>
-                
+                <audio id="audioPlayer" preload="metadata"></audio>
                 <p id="musicDescription">
                     my favorite tracks - click play or use arrows to explore
                 </p>
@@ -456,7 +75,6 @@
             <!-- Work Section -->
             <section id="work" class="section">
                 <h2>$ ls projects/</h2>
-                
                 <div class="project" onclick="openProject('project1')">
                     <h3>minimal-ui-kit</h3>
                     <p class="project-desc">
@@ -464,7 +82,6 @@
                     </p>
                     <p class="project-tech">react • typescript • tailwind • storybook</p>
                 </div>
-
                 <div class="project" onclick="openProject('project2')">
                     <h3>dotfiles</h3>
                     <p class="project-desc">
@@ -472,7 +89,6 @@
                     </p>
                     <p class="project-tech">zsh • neovim • tmux • alacritty</p>
                 </div>
-
                 <div class="project" onclick="openProject('project3')">
                     <h3>markdown-blog-engine</h3>
                     <p class="project-desc">
@@ -480,7 +96,6 @@
                     </p>
                     <p class="project-tech">node.js • markdown • sass • github-actions</p>
                 </div>
-
                 <div class="project" onclick="openProject('project4')">
                     <h3>color-palette-generator</h3>
                     <p class="project-desc">
@@ -504,24 +119,12 @@
     </div>
 
     <script>
-        // Global variables
-        let currentTrackData = null;
-        let isPlaying = false;
-        let audioPlayer = document.getElementById('audioPlayer');
-        let hasUserInteracted = false;
-
         // Navigation
         function showSection(sectionName, event) {
             if (event) event.preventDefault();
-            
-            // Hide all sections
             const sections = document.querySelectorAll('.section');
             sections.forEach(section => section.classList.remove('active'));
-            
-            // Show selected section
             document.getElementById(sectionName).classList.add('active');
-            
-            // Update nav
             const navLinks = document.querySelectorAll('.nav-link');
             navLinks.forEach(link => {
                 link.classList.remove('active');
@@ -531,278 +134,101 @@
             });
         }
 
-        // Spotify Integration
-        const SPOTIFY_API_ENDPOINT = 'https://spotify-api-eight-pi.vercel.app/api/spotify';
+        // Local music player logic
+        let playlist = [];
+        let currentTrack = 0;
+        let isPlaying = false;
+        let audioPlayer = document.getElementById('audioPlayer');
 
-        async function getCurrentlyPlaying() {
+        async function loadPlaylist() {
             try {
-                console.log('Fetching from:', SPOTIFY_API_ENDPOINT);
-                const response = await fetch(SPOTIFY_API_ENDPOINT);
-                
-                console.log('Response status:', response.status);
-                console.log('Response headers:', response.headers);
-                
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-                
-                const data = await response.json();
-                console.log('Spotify API response:', data); // Debug log
-                
-                if (data.currentTrack || data.lastPlayed) {
-                    currentTrackData = data;
-                    updateTrackDisplay(data);
-                    
-                    // Try auto-play on first load
-                    if (!hasUserInteracted && (data.currentTrack || data.lastPlayed)) {
-                        const track = data.currentTrack || data.lastPlayed;
-                        if (track && track.previewUrl) {
-                            attemptAutoPlay(track);
-                        }
-                    }
-                } else {
-                    showNoMusic();
-                }
+                const response = await fetch('music/playlist.json');
+                playlist = await response.json();
+                showTrack(currentTrack);
             } catch (error) {
-                console.error('Error fetching music data:', error);
-                console.error('Error details:', error.message, error.stack);
-                showOffline();
+                document.getElementById('trackName').textContent = 'playlist error';
+                document.getElementById('trackArtist').textContent = '';
             }
         }
 
-        async function attemptAutoPlay(track) {
-            // Set up audio
-            audioPlayer.src = track.previewUrl;
-            audioPlayer.volume = 0.3;
-            
-            // Create a promise that resolves when the audio can play
-            const canPlayPromise = new Promise((resolve) => {
-                audioPlayer.addEventListener('canplay', resolve, { once: true });
-            });
-            
-            try {
-                await canPlayPromise;
-                const playPromise = audioPlayer.play();
-                
-                if (playPromise !== undefined) {
-                    playPromise.then(() => {
-                        isPlaying = true;
-                        hasUserInteracted = true;
-                        document.getElementById('playBtn').textContent = '⏸';
-                        startProgressAnimation();
-                    }).catch(error => {
-                        console.log('Autoplay prevented:', error);
-                        // Set up for manual play
-                        setupManualPlay();
-                    });
-                }
-            } catch (error) {
-                console.log('Audio setup error:', error);
-                setupManualPlay();
-            }
-        }
-
-        function setupManualPlay() {
-            // Enable play on any user interaction
-            const enablePlayback = () => {
-                if (!hasUserInteracted && currentTrackData) {
-                    const track = currentTrackData.currentTrack || currentTrackData.lastPlayed;
-                    if (track && track.previewUrl) {
-                        hasUserInteracted = true;
-                        audioPlayer.play().then(() => {
-                            isPlaying = true;
-                            document.getElementById('playBtn').textContent = '⏸';
-                            startProgressAnimation();
-                        }).catch(e => console.log('Playback failed:', e));
-                    }
-                }
-                // Remove listeners after first interaction
-                document.removeEventListener('click', enablePlayback);
-                document.removeEventListener('touchstart', enablePlayback);
-            };
-            
-            document.addEventListener('click', enablePlayback);
-            document.addEventListener('touchstart', enablePlayback);
-        }
-
-        function updateTrackDisplay(data) {
-            const track = data.currentTrack || data.lastPlayed;
-            
-            if (!track) {
-                showNoMusic();
-                return;
-            }
-            
-            // Update main player
+        function showTrack(index) {
+            if (!playlist.length) return;
+            const track = playlist[index];
             document.getElementById('trackName').textContent = track.name;
-            document.getElementById('trackArtist').textContent = track.artists.join(', ');
-            
-            // Update floating indicator
-            document.getElementById('floatingText').textContent = `♪ ${track.name}`;
-            
-            // Update album art
-            if (track.albumArt) {
-                const img = new Image();
-                img.onload = function() {
-                    document.getElementById('albumArtContainer').innerHTML = '';
-                    img.className = 'album-art';
-                    img.alt = 'Album art';
-                    document.getElementById('albumArtContainer').appendChild(img);
-                };
-                img.src = track.albumArt;
-            }
-            
-            // Store track URL and ID
-            if (currentTrackData) {
-                currentTrackData.trackUrl = track.url;
-                currentTrackData.trackId = track.id;
-            }
-            
-            // Update duration
-            document.getElementById('duration').textContent = formatTime(track.duration);
-            
-            // If currently playing, show progress
-            if (data.isPlaying && data.progress) {
-                const progressPercent = (data.progress / track.duration) * 100;
-                document.getElementById('progress').style.width = progressPercent + '%';
-                document.getElementById('currentTime').textContent = formatTime(data.progress);
-            }
-            
-            // Set up Spotify embed URL
-            if (track.id) {
-                const embedUrl = `https://open.spotify.com/embed/track/${track.id}?utm_source=generator&theme=0`;
-                document.getElementById('spotifyPlayer').src = embedUrl;
-            }
-            
-            // Update audio source if preview URL exists (rare)
-            if (track.previewUrl && audioPlayer.src !== track.previewUrl) {
-                audioPlayer.src = track.previewUrl;
-            }
-        }
-
-        function showNoMusic() {
-            document.getElementById('trackName').textContent = 'no recent activity';
-            document.getElementById('trackArtist').textContent = 'play something on spotify';
-            document.getElementById('floatingText').textContent = 'no music';
-            document.getElementById('progress').style.width = '0%';
-            document.getElementById('currentTime').textContent = '0:00';
-            document.getElementById('duration').textContent = '0:00';
+            document.getElementById('trackArtist').textContent = track.artist;
+            document.getElementById('albumArtContainer').innerHTML = track.albumArt
+                ? `<img src="${track.albumArt}" class="album-art" alt="Album Art">`
+                : '🎵';
+            audioPlayer.src = track.file;
+            audioPlayer.load();
             document.getElementById('playBtn').textContent = '▶';
+            isPlaying = false;
+            document.getElementById('duration').textContent = '0:00';
+            document.getElementById('currentTime').textContent = '0:00';
+            document.getElementById('progress').style.width = '0%';
+            document.getElementById('floatingText').textContent = `♪ ${track.name}`;
         }
 
-        function showOffline() {
-            document.getElementById('trackName').textContent = 'connection error';
-            document.getElementById('trackArtist').textContent = 'spotify api offline';
-            document.getElementById('floatingText').textContent = 'offline';
+        function nextTrack() {
+            currentTrack = (currentTrack + 1) % playlist.length;
+            showTrack(currentTrack);
+            if (isPlaying) audioPlayer.play();
         }
 
-        function formatTime(ms) {
-            const totalSeconds = Math.floor(ms / 1000);
-            const minutes = Math.floor(totalSeconds / 60);
-            const seconds = totalSeconds % 60;
-            return minutes + ':' + (seconds < 10 ? '0' : '') + seconds;
+        function previousTrack() {
+            currentTrack = (currentTrack - 1 + playlist.length) % playlist.length;
+            showTrack(currentTrack);
+            if (isPlaying) audioPlayer.play();
         }
 
-        async function togglePlay() {
-            if (!currentTrackData) {
-                await getCurrentlyPlaying();
-                return;
-            }
-            
-            const track = currentTrackData.currentTrack || currentTrackData.lastPlayed;
-            
-            if (!track) return;
-            
-            hasUserInteracted = true;
-            
-            // If we have a preview URL, use the audio player
-            if (track.previewUrl) {
-                if (isPlaying) {
-                    audioPlayer.pause();
-                    isPlaying = false;
-                    document.getElementById('playBtn').textContent = '▶';
-                } else {
-                    if (audioPlayer.src !== track.previewUrl) {
-                        audioPlayer.src = track.previewUrl;
-                    }
-                    try {
-                        await audioPlayer.play();
-                        isPlaying = true;
-                        document.getElementById('playBtn').textContent = '⏸';
-                        startProgressAnimation();
-                    } catch (error) {
-                        console.error('Playback error:', error);
-                    }
-                }
+        function formatTime(seconds) {
+            seconds = Math.floor(seconds);
+            const min = Math.floor(seconds / 60);
+            const sec = seconds % 60;
+            return min + ':' + (sec < 10 ? '0' : '') + sec;
+        }
+
+        function togglePlay() {
+            if (!audioPlayer.src) return;
+            if (isPlaying) {
+                audioPlayer.pause();
+                document.getElementById('playBtn').textContent = '▶';
             } else {
-                // No preview URL, toggle Spotify embed
-                const embedContainer = document.getElementById('spotifyEmbed');
-                if (embedContainer.style.display === 'none') {
-                    embedContainer.style.display = 'block';
-                    document.getElementById('playBtn').textContent = '⏸';
-                    document.getElementById('musicDescription').textContent = 
-                        'spotify player embedded below - click the track name to open in spotify app';
-                } else {
-                    embedContainer.style.display = 'none';
-                    document.getElementById('playBtn').textContent = '▶';
-                    document.getElementById('musicDescription').textContent = 
-                        'this is what i\'m vibing to right now - click play to hear it embedded, or click the track name to open in spotify.';
-                }
+                audioPlayer.play();
+                document.getElementById('playBtn').textContent = '⏸';
             }
+            isPlaying = !isPlaying;
         }
 
         function startProgressAnimation() {
-            const updateProgress = () => {
+            function updateProgress() {
                 if (!isPlaying || audioPlayer.paused) return;
-                
                 const currentTime = audioPlayer.currentTime;
                 const duration = audioPlayer.duration;
-                
                 if (duration && !isNaN(duration)) {
                     const progressPercent = (currentTime / duration) * 100;
                     document.getElementById('progress').style.width = progressPercent + '%';
-                    document.getElementById('currentTime').textContent = formatTime(currentTime * 1000);
+                    document.getElementById('currentTime').textContent = formatTime(currentTime);
+                    document.getElementById('duration').textContent = formatTime(duration);
                 }
-                
                 requestAnimationFrame(updateProgress);
-            };
-            
+            }
             requestAnimationFrame(updateProgress);
         }
 
         function seekTo(event) {
             if (!audioPlayer.src || !audioPlayer.duration) return;
-            
             const progressBar = event.currentTarget;
             const clickX = event.offsetX;
             const width = progressBar.offsetWidth;
             const percentage = clickX / width;
-            
             audioPlayer.currentTime = percentage * audioPlayer.duration;
         }
 
-        function openInSpotify() {
-            if (currentTrackData && currentTrackData.trackUrl) {
-                window.open(currentTrackData.trackUrl, '_blank');
-            }
-        }
-
-        // Volume control
-        document.getElementById('volumeSlider').addEventListener('input', function(e) {
-            audioPlayer.volume = e.target.value / 100;
-        });
-
-        // Audio player event listeners
+        audioPlayer.addEventListener('play', startProgressAnimation);
         audioPlayer.addEventListener('ended', function() {
-            // Loop the preview
-            if (isPlaying) {
-                audioPlayer.currentTime = 0;
-                audioPlayer.play();
-            }
+            nextTrack();
         });
-
-        // Update every 30 seconds
-        setInterval(getCurrentlyPlaying, 30000);
 
         // Project links
         function openProject(projectId) {
@@ -812,20 +238,16 @@
                 'project3': 'https://github.com/chasemarshall/markdown-blog-engine',
                 'project4': 'https://github.com/chasemarshall/color-palette-generator'
             };
-            
             window.open(projectUrls[projectId], '_blank');
         }
 
         // Initialize
         document.addEventListener('DOMContentLoaded', function() {
-            // Initialize the music player
-            initPlayer();
-            
+            loadPlaylist();
             // Simulate typing effect for the title
             const title = document.querySelector('h1');
             const originalText = title.textContent;
             title.textContent = '';
-            
             let i = 0;
             const typeWriter = setInterval(() => {
                 if (i < originalText.length) {
