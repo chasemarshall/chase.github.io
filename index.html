@@ -190,6 +190,17 @@
             right: 0;
             height: 1px;
             background: linear-gradient(90deg, transparent, var(--accent), transparent);
+            background-size: 200% 100%;
+        }
+
+        .music-player.playing::before {
+            animation: pulseLine 2s linear infinite;
+        }
+
+        @keyframes pulseLine {
+            0% { background-position: 0 0; }
+            50% { background-position: 100% 0; }
+            100% { background-position: 0 0; }
         }
 
         .player-controls {
@@ -320,6 +331,18 @@
             outline: none;
             -webkit-appearance: none;
             appearance: none;
+        }
+
+        .volume-slider::-webkit-slider-runnable-track {
+            background: var(--border);
+            height: 4px;
+            border-radius: 2px;
+        }
+
+        .volume-slider::-moz-range-track {
+            background: var(--border);
+            height: 4px;
+            border-radius: 2px;
         }
 
         .volume-slider::-webkit-slider-thumb {
@@ -495,8 +518,8 @@
                             <div class="track-artist" id="trackArtist">chase's favorites</div>
                         </div>
                         <div class="track-navigation">
-                            <button class="nav-btn" onclick="previousTrack()">◀</button>
-                            <button class="nav-btn" onclick="nextTrack()">▶</button>
+                            <button class="nav-btn" onclick="previousTrack()">⏮</button>
+                            <button class="nav-btn" onclick="nextTrack()">⏭</button>
                         </div>
                     </div>
                     <div class="progress-container">
@@ -505,6 +528,10 @@
                             <div class="progress" id="progress"></div>
                         </div>
                         <span id="duration">0:00</span>
+                    </div>
+                    <div class="volume-control">
+                        <span>vol</span>
+                        <input type="range" id="volumeSlider" class="volume-slider" min="0" max="1" step="0.01" value="1">
                     </div>
                 </div>
                 <audio id="audioPlayer" preload="metadata"></audio>
@@ -604,22 +631,25 @@
             audioPlayer.load();
             document.getElementById('playBtn').textContent = '▶';
             isPlaying = false;
+            document.querySelector('.music-player').classList.remove('playing');
             document.getElementById('duration').textContent = '0:00';
             document.getElementById('currentTime').textContent = '0:00';
             document.getElementById('progress').style.width = '0%';
             document.getElementById('floatingText').textContent = `♪ ${track.name}`;
         }
 
-        function nextTrack() {
+        function nextTrack(autoPlay = false) {
+            const shouldPlay = isPlaying || autoPlay;
             currentTrack = (currentTrack + 1) % playlist.length;
             showTrack(currentTrack);
-            if (isPlaying) audioPlayer.play();
+            if (shouldPlay) playTrack();
         }
 
         function previousTrack() {
+            const shouldPlay = isPlaying;
             currentTrack = (currentTrack - 1 + playlist.length) % playlist.length;
             showTrack(currentTrack);
-            if (isPlaying) audioPlayer.play();
+            if (shouldPlay) playTrack();
         }
 
         function formatTime(seconds) {
@@ -629,16 +659,27 @@
             return min + ':' + (sec < 10 ? '0' : '') + sec;
         }
 
+        function playTrack() {
+            audioPlayer.play();
+            isPlaying = true;
+            document.getElementById('playBtn').textContent = '⏸';
+            document.querySelector('.music-player').classList.add('playing');
+        }
+
+        function pauseTrack() {
+            audioPlayer.pause();
+            isPlaying = false;
+            document.getElementById('playBtn').textContent = '▶';
+            document.querySelector('.music-player').classList.remove('playing');
+        }
+
         function togglePlay() {
             if (!audioPlayer.src) return;
             if (isPlaying) {
-                audioPlayer.pause();
-                document.getElementById('playBtn').textContent = '▶';
+                pauseTrack();
             } else {
-                audioPlayer.play();
-                document.getElementById('playBtn').textContent = '⏸';
+                playTrack();
             }
-            isPlaying = !isPlaying;
         }
 
         function startProgressAnimation() {
@@ -668,7 +709,7 @@
 
         audioPlayer.addEventListener('play', startProgressAnimation);
         audioPlayer.addEventListener('ended', function() {
-            nextTrack();
+            nextTrack(true);
         });
 
         // Project links
@@ -683,8 +724,13 @@
         }
 
         // Initialize
-        document.addEventListener('DOMContentLoaded', function() {
-            loadPlaylist();
+        document.addEventListener('DOMContentLoaded', async function() {
+            await loadPlaylist();
+            document.getElementById('volumeSlider').addEventListener('input', function() {
+                audioPlayer.volume = this.value;
+            });
+            audioPlayer.volume = document.getElementById('volumeSlider').value;
+            playTrack();
             // Simulate typing effect for the title
             const title = document.querySelector('h1');
             const originalText = title.textContent;
