@@ -195,16 +195,22 @@
             100% { background-position: 0 0; }
         }
 
-        .player-controls {
+        .track-details {
             display: flex;
             align-items: center;
-            gap: 1.5rem;
-            margin-bottom: 1.5rem;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .controls {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
         }
 
         .album-art {
-            width: 80px;
-            height: 80px;
+            width: 64px;
+            height: 64px;
             border-radius: 8px;
             object-fit: cover;
             border: 2px solid var(--border);
@@ -217,8 +223,8 @@
         }
 
         .album-art-placeholder {
-            width: 80px;
-            height: 80px;
+            width: 64px;
+            height: 64px;
             border-radius: 8px;
             background: var(--border);
             display: flex;
@@ -232,8 +238,8 @@
             background: linear-gradient(135deg, var(--accent), #4f46e5);
             border: none;
             border-radius: 50%;
-            width: 60px;
-            height: 60px;
+            width: 44px;
+            height: 44px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -286,8 +292,8 @@
             background: var(--hover);
             border: 1px solid var(--border);
             border-radius: 8px;
-            width: 40px;
-            height: 40px;
+            width: 36px;
+            height: 36px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -443,7 +449,7 @@
                 gap: 1rem;
             }
             
-            .player-controls {
+            .controls {
                 flex-direction: column;
                 align-items: flex-start;
             }

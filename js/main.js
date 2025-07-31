@@ -2,27 +2,60 @@
         let playlist = [];
         let currentTrack = 0;
         let isPlaying = false;
-        let audioPlayer = document.getElementById('audioPlayer');
+let audioPlayer = document.getElementById('audioPlayer');
+
+async function getAlbumArt(file) {
+    return new Promise((resolve) => {
+        if (window.jsmediatags) {
+            window.jsmediatags.read(file, {
+                onSuccess: function(tag) {
+                    const picture = tag.tags.picture;
+                    if (picture) {
+                        let base64String = "";
+                        for (let i = 0; i < picture.data.length; i++) {
+                            base64String += String.fromCharCode(picture.data[i]);
+                        }
+                        const base64 = `data:${picture.format};base64,${btoa(base64String)}`;
+                        resolve(base64);
+                    } else {
+                        resolve(null);
+                    }
+                },
+                onError: function() { resolve(null); }
+            });
+        } else {
+            resolve(null);
+        }
+    });
+}
 
         async function loadPlaylist() {
             try {
                 const response = await fetch('music/playlist.json');
                 playlist = await response.json();
-                showTrack(currentTrack);
+                await showTrack(currentTrack);
             } catch (error) {
                 document.getElementById('trackName').textContent = 'playlist error';
                 document.getElementById('trackArtist').textContent = '';
             }
         }
 
-        function showTrack(index) {
+        async function showTrack(index) {
             if (!playlist.length) return;
             const track = playlist[index];
             document.getElementById('trackName').textContent = track.name;
             document.getElementById('trackArtist').textContent = track.artist;
-            document.getElementById('albumArtContainer').innerHTML = track.albumArt
-                ? `<img src="${track.albumArt}" class="album-art" alt="Album Art">`
-                : '🎵';
+            if (track.albumArt) {
+                document.getElementById('albumArtContainer').innerHTML = `<img src="${track.albumArt}" class="album-art" alt="Album Art">`;
+            } else {
+                const art = await getAlbumArt(track.file);
+                if (art) {
+                    document.getElementById('albumArtContainer').innerHTML = `<img src="${art}" class="album-art" alt="Album Art">`;
+                    track.albumArt = art;
+                } else {
+                    document.getElementById('albumArtContainer').innerHTML = '🎵';
+                }
+            }
             audioPlayer.src = track.file;
             audioPlayer.load();
             document.getElementById('playBtn').textContent = '▶';
@@ -34,17 +67,17 @@
             document.getElementById('floatingText').textContent = `♪ ${track.name}`;
         }
 
-        function nextTrack(autoPlay = false) {
+        async function nextTrack(autoPlay = false) {
             const shouldPlay = isPlaying || autoPlay;
             currentTrack = (currentTrack + 1) % playlist.length;
-            showTrack(currentTrack);
+            await showTrack(currentTrack);
             if (shouldPlay) playTrack();
         }
 
-        function previousTrack() {
+        async function previousTrack() {
             const shouldPlay = isPlaying;
             currentTrack = (currentTrack - 1 + playlist.length) % playlist.length;
-            showTrack(currentTrack);
+            await showTrack(currentTrack);
             if (shouldPlay) playTrack();
         }
 
