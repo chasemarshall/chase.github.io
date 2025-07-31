@@ -18,4 +18,6 @@ npm start
 
 This uses [http-server](https://www.npmjs.com/package/http-server) to serve the static files on port 8080.
 
+The music player remembers your last track and position so you can browse other pages without losing your place.
+
 Feel free to clone the repo and customize it!

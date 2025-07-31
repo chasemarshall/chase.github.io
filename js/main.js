@@ -1,15 +1,16 @@
         // Local music player logic
+        const stateKey = 'playerState';
         let playlist = [];
         let currentTrack = 0;
         let isPlaying = false;
-        let audioPlayer = document.getElementById('audioPlayer');
+        const audioPlayer = document.getElementById('audioPlayer');
 
         async function loadPlaylist() {
             try {
                 const response = await fetch('music/playlist.json');
                 playlist = await response.json();
-                showTrack(currentTrack);
             } catch (error) {
+                playlist = [];
                 document.getElementById('trackName').textContent = 'playlist error';
                 document.getElementById('trackArtist').textContent = '';
             }
@@ -26,26 +27,26 @@
             audioPlayer.src = track.file;
             audioPlayer.load();
             document.getElementById('playBtn').textContent = '▶';
-            isPlaying = false;
             document.querySelector('.music-player').classList.remove('playing');
             document.getElementById('duration').textContent = '0:00';
             document.getElementById('currentTime').textContent = '0:00';
             document.getElementById('progress').style.width = '0%';
             document.getElementById('floatingText').textContent = `♪ ${track.name}`;
+            isPlaying = false;
         }
 
         function nextTrack(autoPlay = false) {
-            const shouldPlay = isPlaying || autoPlay;
+            const wasPlaying = isPlaying;
             currentTrack = (currentTrack + 1) % playlist.length;
             showTrack(currentTrack);
-            if (shouldPlay) playTrack();
+            if (wasPlaying || autoPlay) playTrack();
         }
 
         function previousTrack() {
-            const shouldPlay = isPlaying;
+            const wasPlaying = isPlaying;
             currentTrack = (currentTrack - 1 + playlist.length) % playlist.length;
             showTrack(currentTrack);
-            if (shouldPlay) playTrack();
+            if (wasPlaying) playTrack();
         }
 
         function formatTime(seconds) {
@@ -108,6 +109,17 @@
             nextTrack(true);
         });
 
+        function saveState() {
+            if (!audioPlayer) return;
+            const state = {
+                track: currentTrack,
+                time: audioPlayer.currentTime,
+                volume: audioPlayer.volume,
+                playing: isPlaying
+            };
+            localStorage.setItem(stateKey, JSON.stringify(state));
+        }
+
         // Project links
         function openProject(projectId) {
             const projectUrls = {
@@ -123,27 +135,50 @@
 document.addEventListener('DOMContentLoaded', async function() {
     if (audioPlayer) {
         await loadPlaylist();
+        const saved = localStorage.getItem(stateKey);
+        if (saved) {
+            try {
+                const state = JSON.parse(saved);
+                currentTrack = state.track || 0;
+                showTrack(currentTrack);
+                audioPlayer.addEventListener('loadedmetadata', function restore() {
+                    audioPlayer.currentTime = state.time || 0;
+                    audioPlayer.removeEventListener('loadedmetadata', restore);
+                });
+                if (state.volume !== undefined) {
+                    audioPlayer.volume = state.volume;
+                    const volumeSlider = document.getElementById('volumeSlider');
+                    if (volumeSlider) volumeSlider.value = state.volume;
+                }
+                if (state.playing) playTrack();
+            } catch (e) {
+                showTrack(0);
+            }
+        } else {
+            showTrack(currentTrack);
+        }
+
         const volume = document.getElementById('volumeSlider');
         if (volume) {
             volume.addEventListener('input', function() {
                 audioPlayer.volume = this.value;
             });
-            audioPlayer.volume = volume.value;
         }
-        playTrack();
+
+        window.addEventListener('beforeunload', saveState);
     }
-    // Simulate typing effect for the title
-            const title = document.querySelector('h1');
-            const originalText = title.textContent;
-            title.textContent = '';
-            let i = 0;
-            const typeWriter = setInterval(() => {
-                if (i < originalText.length) {
-                    title.textContent += originalText.charAt(i);
-                    i++;
-                } else {
-                    clearInterval(typeWriter);
-                }
-            }, 100);
-        });
+
+    const title = document.querySelector('h1');
+    const originalText = title.textContent;
+    title.textContent = '';
+    let i = 0;
+    const typeWriter = setInterval(() => {
+        if (i < originalText.length) {
+            title.textContent += originalText.charAt(i);
+            i++;
+        } else {
+            clearInterval(typeWriter);
+        }
+    }, 100);
+});
 
