@@ -8,10 +8,17 @@
             try {
                 const response = await fetch('music/playlist.json');
                 playlist = await response.json();
-                showTrack(currentTrack);
+                if (audioPlayer) {
+                    showTrack(currentTrack);
+                } else if (playlist.length) {
+                    document.getElementById('floatingText').textContent = `♪ ${playlist[currentTrack].name}`;
+                }
             } catch (error) {
-                document.getElementById('trackName').textContent = 'playlist error';
-                document.getElementById('trackArtist').textContent = '';
+                if (document.getElementById('trackName')) {
+                    document.getElementById('trackName').textContent = 'playlist error';
+                    document.getElementById('trackArtist').textContent = '';
+                }
+                document.getElementById('floatingText').textContent = 'playlist error';
             }
         }
 
@@ -121,8 +128,8 @@
 
         // Initialize
 document.addEventListener('DOMContentLoaded', async function() {
+    await loadPlaylist();
     if (audioPlayer) {
-        await loadPlaylist();
         const volume = document.getElementById('volumeSlider');
         if (volume) {
             volume.addEventListener('input', function() {
