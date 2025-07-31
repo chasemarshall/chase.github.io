@@ -4,19 +4,25 @@
         let isPlaying = false;
         let audioPlayer = document.getElementById('audioPlayer');
 
+        if (!audioPlayer) {
+            audioPlayer = document.createElement('audio');
+            audioPlayer.id = 'audioPlayer';
+            audioPlayer.style.display = 'none';
+            document.body.appendChild(audioPlayer);
+        }
+
+        const savedState = JSON.parse(sessionStorage.getItem('playerState') || '{}');
+
         async function loadPlaylist() {
             try {
                 const response = await fetch('music/playlist.json');
                 playlist = await response.json();
-                if (audioPlayer) {
-                    showTrack(currentTrack);
-                } else if (playlist.length) {
-                    document.getElementById('floatingText').textContent = `♪ ${playlist[currentTrack].name}`;
-                }
             } catch (error) {
-                if (document.getElementById('trackName')) {
-                    document.getElementById('trackName').textContent = 'playlist error';
-                    document.getElementById('trackArtist').textContent = '';
+                const nameEl = document.getElementById('trackName');
+                if (nameEl) {
+                    nameEl.textContent = 'playlist error';
+                    const artistEl = document.getElementById('trackArtist');
+                    if (artistEl) artistEl.textContent = '';
                 }
                 document.getElementById('floatingText').textContent = 'playlist error';
             }
@@ -25,19 +31,39 @@
         function showTrack(index) {
             if (!playlist.length) return;
             const track = playlist[index];
-            document.getElementById('trackName').textContent = track.name;
-            document.getElementById('trackArtist').textContent = track.artist;
-            document.getElementById('albumArtContainer').innerHTML = track.albumArt
-                ? `<img src="${track.albumArt}" class="album-art" alt="Album Art">`
-                : '🎵';
+
+            const nameEl = document.getElementById('trackName');
+            if (nameEl) nameEl.textContent = track.name;
+
+            const artistEl = document.getElementById('trackArtist');
+            if (artistEl) artistEl.textContent = track.artist;
+
+            const artEl = document.getElementById('albumArtContainer');
+            if (artEl) {
+                artEl.innerHTML = track.albumArt
+                    ? `<img src="${track.albumArt}" class="album-art" alt="Album Art">`
+                    : '🎵';
+            }
+
             audioPlayer.src = track.file;
             audioPlayer.load();
-            document.getElementById('playBtn').textContent = '▶';
+
+            const playBtn = document.getElementById('playBtn');
+            if (playBtn) playBtn.textContent = '▶';
             isPlaying = false;
-            document.querySelector('.music-player').classList.remove('playing');
-            document.getElementById('duration').textContent = '0:00';
-            document.getElementById('currentTime').textContent = '0:00';
-            document.getElementById('progress').style.width = '0%';
+
+            const playerEl = document.querySelector('.music-player');
+            if (playerEl) playerEl.classList.remove('playing');
+
+            const durationEl = document.getElementById('duration');
+            if (durationEl) durationEl.textContent = '0:00';
+
+            const currentTimeEl = document.getElementById('currentTime');
+            if (currentTimeEl) currentTimeEl.textContent = '0:00';
+
+            const progressEl = document.getElementById('progress');
+            if (progressEl) progressEl.style.width = '0%';
+
             document.getElementById('floatingText').textContent = `♪ ${track.name}`;
         }
 
@@ -48,8 +74,8 @@
             if (shouldPlay) playTrack();
         }
 
-        function previousTrack() {
-            const shouldPlay = isPlaying;
+        function previousTrack(autoPlay = false) {
+            const shouldPlay = isPlaying || autoPlay;
             currentTrack = (currentTrack - 1 + playlist.length) % playlist.length;
             showTrack(currentTrack);
             if (shouldPlay) playTrack();
@@ -65,15 +91,19 @@
         function playTrack() {
             audioPlayer.play();
             isPlaying = true;
-            document.getElementById('playBtn').textContent = '⏸';
-            document.querySelector('.music-player').classList.add('playing');
+            const playBtn = document.getElementById('playBtn');
+            if (playBtn) playBtn.textContent = '⏸';
+            const playerEl = document.querySelector('.music-player');
+            if (playerEl) playerEl.classList.add('playing');
         }
 
         function pauseTrack() {
             audioPlayer.pause();
             isPlaying = false;
-            document.getElementById('playBtn').textContent = '▶';
-            document.querySelector('.music-player').classList.remove('playing');
+            const playBtn = document.getElementById('playBtn');
+            if (playBtn) playBtn.textContent = '▶';
+            const playerEl = document.querySelector('.music-player');
+            if (playerEl) playerEl.classList.remove('playing');
         }
 
         function togglePlay() {
@@ -86,15 +116,20 @@
         }
 
         function startProgressAnimation() {
+            const progressEl = document.getElementById('progress');
+            const currentEl = document.getElementById('currentTime');
+            const durationEl = document.getElementById('duration');
+            if (!progressEl || !currentEl || !durationEl) return;
+
             function updateProgress() {
                 if (!isPlaying || audioPlayer.paused) return;
                 const currentTime = audioPlayer.currentTime;
                 const duration = audioPlayer.duration;
                 if (duration && !isNaN(duration)) {
                     const progressPercent = (currentTime / duration) * 100;
-                    document.getElementById('progress').style.width = progressPercent + '%';
-                    document.getElementById('currentTime').textContent = formatTime(currentTime);
-                    document.getElementById('duration').textContent = formatTime(duration);
+                    progressEl.style.width = progressPercent + '%';
+                    currentEl.textContent = formatTime(currentTime);
+                    durationEl.textContent = formatTime(duration);
                 }
                 requestAnimationFrame(updateProgress);
             }
@@ -104,6 +139,7 @@
         function seekTo(event) {
             if (!audioPlayer.src || !audioPlayer.duration) return;
             const progressBar = event.currentTarget;
+            if (!progressBar) return;
             const clickX = event.offsetX;
             const width = progressBar.offsetWidth;
             const percentage = clickX / width;
@@ -129,16 +165,36 @@
         // Initialize
 document.addEventListener('DOMContentLoaded', async function() {
     await loadPlaylist();
-    if (audioPlayer) {
-        const volume = document.getElementById('volumeSlider');
-        if (volume) {
-            volume.addEventListener('input', function() {
-                audioPlayer.volume = this.value;
-            });
-            audioPlayer.volume = volume.value;
-        }
+
+    if (savedState.currentTrack !== undefined) {
+        currentTrack = savedState.currentTrack;
+    }
+
+    showTrack(currentTrack);
+
+    if (savedState.currentTime) {
+        audioPlayer.currentTime = savedState.currentTime;
+    }
+
+    const volume = document.getElementById('volumeSlider');
+    if (volume) {
+        volume.addEventListener('input', function() {
+            audioPlayer.volume = this.value;
+        });
+        audioPlayer.volume = volume.value;
+    }
+
+    if (savedState.isPlaying !== false) {
         playTrack();
     }
+
+    window.addEventListener('beforeunload', function() {
+        sessionStorage.setItem('playerState', JSON.stringify({
+            currentTrack,
+            currentTime: audioPlayer.currentTime,
+            isPlaying
+        }));
+    });
     // Simulate typing effect for the title
             const title = document.querySelector('h1');
             const originalText = title.textContent;
