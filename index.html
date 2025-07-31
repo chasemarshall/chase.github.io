@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -277,72 +276,34 @@
             font-size: 0.85rem;
         }
 
-        .volume-control {
+        .track-navigation {
             display: flex;
-            align-items: center;
             gap: 0.5rem;
-            color: var(--text-dim);
-            font-size: 0.9rem;
         }
 
-        .volume-slider {
-            width: 100px;
-            height: 4px;
-            background: var(--border);
-            border-radius: 2px;
-            outline: none;
-            -webkit-appearance: none;
-            appearance: none;
-        }
-
-        .volume-slider::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            appearance: none;
-            width: 12px;
-            height: 12px;
-            background: var(--accent);
-            border-radius: 50%;
-            cursor: pointer;
-        }
-
-        .volume-slider::-moz-range-thumb {
-            width: 12px;
-            height: 12px;
-            background: var(--accent);
-            border-radius: 50%;
-            cursor: pointer;
-            border: none;
-        }
-
-        .progress-container {
+        .nav-btn {
+            background: var(--hover);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            width: 40px;
+            height: 40px;
             display: flex;
             align-items: center;
-            gap: 1rem;
-            font-family: 'JetBrains Mono', 'Courier New', monospace;
-            font-size: 0.8rem;
-            color: var(--text-dim);
-        }
-
-        .progress-bar {
-            flex: 1;
-            background: var(--border);
-            height: 6px;
-            border-radius: 3px;
-            overflow: hidden;
+            justify-content: center;
             cursor: pointer;
-            position: relative;
+            transition: all 0.3s ease;
+            color: var(--text);
+            font-size: 1rem;
         }
 
-        .progress-bar:hover {
-            height: 8px;
+        .nav-btn:hover {
+            background: var(--accent);
+            color: white;
+            transform: scale(1.05);
         }
 
-        .progress {
-            background: linear-gradient(90deg, var(--accent), #4f46e5);
-            height: 100%;
-            width: 0%;
-            transition: width 0.1s ease;
-            border-radius: 3px;
+        .nav-btn:active {
+            transform: scale(0.95);
         }
 
         /* Audio element (hidden) */
@@ -463,27 +424,19 @@
                 <div class="music-player">
                     <div class="player-controls">
                         <div id="albumArtContainer" class="album-art-placeholder">🎵</div>
-                        <button class="play-btn" onclick="togglePlay()" id="playBtn">▶</button>
                         <div class="track-info">
                             <div class="track-name" id="trackName" onclick="openInSpotify()">connecting to spotify...</div>
                             <div class="track-artist" id="trackArtist">loading your music</div>
                         </div>
-                        <div class="volume-control">
-                            <span>🔊</span>
-                            <input type="range" class="volume-slider" id="volumeSlider" min="0" max="100" value="30">
+                        <div class="track-navigation">
+                            <button class="nav-btn" onclick="previousTrack()">◀</button>
+                            <button class="nav-btn" onclick="nextTrack()">▶</button>
                         </div>
-                    </div>
-                    <div class="progress-container">
-                        <span id="currentTime">0:00</span>
-                        <div class="progress-bar" onclick="seekTo(event)">
-                            <div class="progress" id="progress"></div>
-                        </div>
-                        <span id="duration">0:00</span>
                     </div>
                 </div>
                 
                 <!-- Spotify Embed Container -->
-                <div id="spotifyEmbed" style="display: none; margin-top: 1rem;">
+                <div id="spotifyEmbed" style="margin-top: 1rem;">
                     <iframe id="spotifyPlayer" 
                             style="border-radius: 12px; width: 100%; height: 152px;" 
                             frameborder="0" 
@@ -493,13 +446,8 @@
                     </iframe>
                 </div>
                 
-                <!-- Hidden audio player for previews (when available) -->
-                <audio id="audioPlayer" preload="none" loop>
-                    <source id="audioSource" src="" type="audio/mpeg">
-                </audio>
                 <p id="musicDescription">
-                    this is what i'm vibing to right now - click play to hear it embedded, 
-                    or click the track name to open in spotify.
+                    my favorite tracks - use the arrows to skip through my playlist
                 </p>
             </section>
 
@@ -582,7 +530,7 @@
         }
 
         // Spotify Integration
-        const SPOTIFY_API_ENDPOINT = 'https://spotify-api-eight-pi.vercel.app/api/spotify';
+        const SPOTIFY_API_ENDPOINT = 'https://spotify-api-git-main-bennetts-projects-3192ee3a.vercel.app/api/spotify';
 
         async function getCurrentlyPlaying() {
             try {
