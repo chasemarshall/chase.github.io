@@ -11,12 +11,15 @@
 
         async function loadPlaylist() {
             try {
-                const response = await fetch('music/playlist.json');
+                const response = await fetch('./music/playlist.json');
                 playlist = await response.json();
             } catch (error) {
                 playlist = [];
-                document.getElementById('trackName').textContent = 'playlist error';
-                document.getElementById('trackArtist').textContent = '';
+                console.error('Failed to load playlist', error);
+                const nameEl = document.getElementById('trackName');
+                const artistEl = document.getElementById('trackArtist');
+                if (nameEl) nameEl.textContent = 'playlist error';
+                if (artistEl) artistEl.textContent = '';
             }
         }
 
@@ -56,6 +59,7 @@
             currentTrack = (currentTrack + 1) % playlist.length;
             showTrack(currentTrack);
             if (wasPlaying || autoPlay) playTrack();
+            saveState();
         }
 
         function previousTrack() {
@@ -63,6 +67,7 @@
             currentTrack = (currentTrack - 1 + playlist.length) % playlist.length;
             showTrack(currentTrack);
             if (wasPlaying) playTrack();
+            saveState();
         }
 
         function formatTime(seconds) {
@@ -79,6 +84,7 @@
             isPlaying = true;
             if (playBtn) playBtn.textContent = '⏸';
             if (mp) mp.classList.add('playing');
+            saveState();
         }
 
         function pauseTrack() {
@@ -88,6 +94,7 @@
             isPlaying = false;
             if (playBtn) playBtn.textContent = '▶';
             if (mp) mp.classList.remove('playing');
+            saveState();
         }
 
         function togglePlay() {
@@ -185,8 +192,12 @@ document.addEventListener('DOMContentLoaded', async function() {
         if (volume) {
             volume.addEventListener('input', function() {
                 audioPlayer.volume = this.value;
+                saveState();
             });
         }
+
+        audioPlayer.addEventListener('timeupdate', saveState);
+        audioPlayer.addEventListener('volumechange', saveState);
 
         window.addEventListener('beforeunload', saveState);
     }

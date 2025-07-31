@@ -13,6 +13,7 @@ The page uses a little JavaScript for the music player and a floating music indi
 The project includes a basic `package.json` so you can start a local server with:
 
 ```bash
+npm install
 npm start
 ```
 
