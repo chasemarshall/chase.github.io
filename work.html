@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chase Marshall - Work</title>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>chase</h1>
+            <p class="subtitle">developer • creator • human</p>
+            <nav>
+                <ul>
+                    <li><a href="index.html" class="nav-link">about</a></li>
+                    <li><a href="music.html" class="nav-link">music</a></li>
+                    <li><a href="work.html" class="nav-link active">work</a></li>
+                </ul>
+            </nav>
+        </header>
+        <main>
+            <section id="work">
+                <h2>$ ls projects/</h2>
+                <div class="project" onclick="openProject('project1')">
+                    <h3>minimal-ui-kit</h3>
+                    <p class="project-desc">
+                        A collection of clean, accessible React components built with TypeScript and Tailwind.
+                    </p>
+                    <p class="project-tech">react • typescript • tailwind • storybook</p>
+                </div>
+                <div class="project" onclick="openProject('project2')">
+                    <h3>dotfiles</h3>
+                    <p class="project-desc">
+                        My carefully curated development environment setup. Terminal, vim, and workflow configs.
+                    </p>
+                    <p class="project-tech">zsh • neovim • tmux • alacritty</p>
+                </div>
+                <div class="project" onclick="openProject('project3')">
+                    <h3>markdown-blog-engine</h3>
+                    <p class="project-desc">
+                        Static site generator that transforms markdown into beautiful, fast-loading blog posts.
+                    </p>
+                    <p class="project-tech">node.js • markdown • sass • github-actions</p>
+                </div>
+                <div class="project" onclick="openProject('project4')">
+                    <h3>color-palette-generator</h3>
+                    <p class="project-desc">
+                        Generate accessible color schemes for your next project with a11y compliance built-in.
+                    </p>
+                    <p class="project-tech">javascript • canvas • wcag • pwa</p>
+                </div>
+            </section>
+        </main>
+    </div>
+    <audio id="audioPlayer" preload="metadata"></audio>
+    <script src="js/main.js"></script>
+</body>
+</html>
