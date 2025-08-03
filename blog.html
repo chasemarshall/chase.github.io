@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chase Marshall</title>
+    <title>Chase Marshall - Blog</title>
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
 </head>
@@ -15,30 +15,22 @@
             <p class="subtitle">developer • creator • human</p>
             <nav>
                     <ul>
-                        <li><a href="index.html" class="nav-link active">about</a></li>
+                        <li><a href="index.html" class="nav-link">about</a></li>
                         <li><a href="music.html" class="nav-link">music</a></li>
                         <li><a href="work.html" class="nav-link">work</a></li>
-                        <li><a href="blog.html" class="nav-link">blog</a></li>
+                        <li><a href="blog.html" class="nav-link active">blog</a></li>
                         <li><a href="privacy.html" class="nav-link">privacy</a></li>
                     </ul>
                 </nav>
             </header>
         <main>
-            <section id="about">
-                <h2>$ whoami</h2>
-                <p>
-                    hey there! i'm a developer who loves building things that matter.
-                    currently focused on creating elegant solutions to complex problems.
-                </p>
-                <p>
-                    when i'm not coding, you'll find me exploring new music, diving into
-                    design systems, or probably overthinking the perfect font pairing
-                    (spoiler: it's usually jetbrains mono).
-                </p>
-                <p>
-                    i believe in clean code, minimalist design, and the power of
-                    good typography to make everything better.
-                </p>
+            <section id="blog">
+                <h2>$ blog</h2>
+                <div class="filter-bar">
+                    <input type="text" id="searchInput" placeholder="search posts...">
+                    <select id="categoryFilter"></select>
+                </div>
+                <div id="blogContainer" class="blog-grid"></div>
             </section>
         </main>
     </div>
@@ -52,7 +44,15 @@
         <div class="floating-text" id="floatingText">loading...</div>
     </div>
     <audio id="audioPlayer" preload="auto" style="display:none" autoplay></audio>
+    <div id="postModal" class="modal" style="display:none;">
+        <div class="modal-content">
+            <span id="modalClose" class="modal-close">&times;</span>
+            <h3 id="modalTitle"></h3>
+            <div id="modalBody"></div>
+        </div>
+    </div>
     <script src="https://cdn.jsdelivr.net/npm/music-metadata-browser/dist/music-metadata-browser.min.js"></script>
     <script src="js/main.js"></script>
+    <script src="js/blog.js"></script>
 </body>
 </html>
