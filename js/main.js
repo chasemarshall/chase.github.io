@@ -5,6 +5,18 @@ let isPlaying = false;
 const audioPlayer = document.getElementById('audioPlayer');
 let initialState = {};
 
+function applyTheme(mode) {
+    document.body.classList.toggle('light-mode', mode === 'light');
+    const toggle = document.getElementById('themeToggle');
+    if (toggle) toggle.textContent = mode === 'light' ? '🌙' : '☀️';
+    localStorage.setItem('theme', mode);
+}
+
+function toggleTheme() {
+    const current = localStorage.getItem('theme') || 'dark';
+    applyTheme(current === 'dark' ? 'light' : 'dark');
+}
+
 function arrayBufferToBase64(buffer) {
     let binary = '';
     const bytes = new Uint8Array(buffer);
@@ -217,6 +229,12 @@ function openProject(projectId) {
 
 // Initialize
 document.addEventListener('DOMContentLoaded', async function () {
+    const savedTheme = localStorage.getItem('theme') || 'dark';
+    applyTheme(savedTheme);
+    const themeToggle = document.getElementById('themeToggle');
+    if (themeToggle) {
+        themeToggle.addEventListener('click', toggleTheme);
+    }
     await loadPlaylist();
     restoreState();
     showTrack(currentTrack);
