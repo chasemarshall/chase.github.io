@@ -8,7 +8,7 @@ let initialState = {};
 function applyTheme(mode) {
     document.body.classList.toggle('light-mode', mode === 'light');
     const toggle = document.getElementById('themeToggle');
-    if (toggle) toggle.textContent = mode === 'light' ? '🌙' : '☀️';
+    if (toggle) toggle.textContent = mode === 'light' ? '☾' : '☼';
     localStorage.setItem('theme', mode);
 }
 
@@ -105,7 +105,7 @@ function showTrack(index) {
     if (artEl) {
         artEl.innerHTML = track.albumArt
             ? `<img src="${track.albumArt}" class="album-art" alt="Album Art">`
-            : '🎵';
+            : '♪';
     }
     if (audioPlayer) {
         audioPlayer.src = track.file;

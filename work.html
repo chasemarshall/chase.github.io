@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-    <div id="themeToggle" class="theme-toggle">☀️</div>
+    <div id="themeToggle" class="theme-toggle">☼</div>
     <div class="container">
         <header>
             <h1>chase</h1>
@@ -24,35 +24,12 @@
             </header>
         <main>
             <section id="work">
-                <h2>$ ls projects/</h2>
-                <div class="project" onclick="openProject('project1')">
-                    <h3>python-password-manager</h3>
-                    <p class="project-desc">
-                        A lightweight CLI tool to securely store, generate, and retrieve passwords.
-                    </p>
-                    <p class="project-tech">python • sqlite • cryptography</p>
+                <h2>$ blog</h2>
+                <div class="filter-bar">
+                    <input type="text" id="searchInput" placeholder="search posts...">
+                    <select id="categoryFilter"></select>
                 </div>
-                <div class="project" onclick="openProject('project2')">
-                    <h3>dotfiles</h3>
-                    <p class="project-desc">
-                        My carefully curated development environment setup. Terminal, vim, and workflow configs.
-                    </p>
-                    <p class="project-tech">zsh • neovim • tmux • alacritty</p>
-                </div>
-                <div class="project" onclick="openProject('project3')">
-                    <h3>ticket-system</h3>
-                    <p class="project-desc">
-                        Full-stack application for tracking and managing support tickets.
-                    </p>
-                    <p class="project-tech">node.js • express • mongo</p>
-                </div>
-                <div class="project" onclick="openProject('project4')">
-                    <h3>trash-pickup</h3>
-                    <p class="project-desc">
-                        Mobile-friendly app to schedule and track neighborhood trash pickups.
-                    </p>
-                    <p class="project-tech">javascript • pwa</p>
-                </div>
+                <div id="blogContainer" class="blog-grid"></div>
             </section>
         </main>
     </div>
@@ -66,7 +43,15 @@
         <div class="floating-text" id="floatingText">loading...</div>
     </div>
     <audio id="audioPlayer" preload="auto" style="display:none" autoplay></audio>
+    <div id="postModal" class="modal" style="display:none;">
+        <div class="modal-content">
+            <span id="modalClose" class="modal-close">&times;</span>
+            <h3 id="modalTitle"></h3>
+            <div id="modalBody"></div>
+        </div>
+    </div>
     <script src="https://cdn.jsdelivr.net/npm/music-metadata-browser/dist/music-metadata-browser.min.js"></script>
     <script src="js/main.js"></script>
+    <script src="js/blog.js"></script>
 </body>
 </html>
