@@ -97,7 +97,6 @@ function showTrack(index) {
     }
     if (audioPlayer) {
         audioPlayer.src = track.file;
-        audioPlayer.load();
     }
     const playBtn = document.getElementById('playBtn');
     if (playBtn) playBtn.textContent = '▶';
@@ -229,7 +228,7 @@ document.addEventListener('DOMContentLoaded', async function () {
                 saveState();
             });
         }
-        audioPlayer.addEventListener('loadedmetadata', function () {
+        audioPlayer.addEventListener('canplay', function () {
             audioPlayer.currentTime = initialState.time || 0;
             if (initialState.isPlaying !== false) {
                 playTrack();
