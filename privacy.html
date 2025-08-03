@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-    <div id="themeToggle" class="theme-toggle">☀️</div>
+    <div id="themeToggle" class="theme-toggle">☼</div>
     <div class="container">
         <header>
             <h1>chase</h1>
@@ -25,29 +25,20 @@
         <main>
             <section id="privacy">
                 <h2>$ privacy_matters</h2>
-                <div class="tab-container">
-                    <button id="resourcesTab" class="tab active">resources</button>
-                    <button id="quizTab" class="tab">quiz</button>
-                </div>
-                <div id="resourcesSection" class="fade-in">
-                    <p>
-                        In the modern age of digital data exploitation, your privacy has never been more critical, and yet many believe it is already a lost cause. It is not. <span class="highlight">Your privacy is up for grabs</span>, and you need to care about it. Privacy is about power, and it is so important that this power ends up in the right hands. - <a href="https://www.privacyguides.org/en/" target="_blank" class="inline-link">The Privacy Guide</a>
+                <p>
+                    In the modern age of digital data exploitation, your privacy has never been more critical, and yet many believe it is already a lost cause. It is not. <span class="highlight">Your privacy is up for grabs</span>, and you need to care about it. Privacy is about power, and it is so important that this power ends up in the right hands. - <a href="https://www.privacyguides.org/en/" target="_blank" class="inline-link">The Privacy Guide</a>
+                </p>
+                <div class="resource" onclick="window.open('https://www.privacyguides.org/en/', '_blank')">
+                    <h3>The Privacy Guides <span class="badges"><span class="badge" data-tooltip="Security resource">⛨</span><span class="badge" data-tooltip="Level: Intermediate">★</span></span></h3>
+                    <p class="resource-desc">
+                        Privacy Guides is a not-for-profit, volunteer-run project that hosts online communities and publishes news and recommendations surrounding privacy and security tools, services, and knowledge.
                     </p>
-                    <div class="resource" onclick="window.open('https://www.privacyguides.org/en/', '_blank')">
-                        <h3>The Privacy Guides <span class="badges"><span class="badge" data-tooltip="Security resource">🔒</span><span class="badge" data-tooltip="Level: Intermediate">⭐</span></span></h3>
-                        <p class="resource-desc">
-                            Privacy Guides is a not-for-profit, volunteer-run project that hosts online communities and publishes news and recommendations surrounding privacy and security tools, services, and knowledge.
-                        </p>
-                    </div>
-                    <div class="resource" onclick="window.open('https://privacyactivistkit.org/', '_blank')">
-                        <h3>Privacy Activist Kit <span class="badges"><span class="badge" data-tooltip="Security resource">🔒</span><span class="badge" data-tooltip="Level: Beginner">🌱</span></span></h3>
-                        <p class="resource-desc">
-                            The Privacy Activist Kit is a free, open source hub of privacy tools, guides, teaching materials, and simple explanations designed to support activists, organizers, educators, students, curious beginners, and anyone tired of being tracked online.
-                        </p>
-                    </div>
                 </div>
-                <div id="quizSection" style="display:none;">
-                    <div id="quizContent"></div>
+                <div class="resource" onclick="window.open('https://privacyactivistkit.org/', '_blank')">
+                    <h3>Privacy Activist Kit <span class="badges"><span class="badge" data-tooltip="Security resource">⛨</span><span class="badge" data-tooltip="Level: Beginner">✿</span></span></h3>
+                    <p class="resource-desc">
+                        The Privacy Activist Kit is a free, open source hub of privacy tools, guides, teaching materials, and simple explanations designed to support activists, organizers, educators, students, curious beginners, and anyone tired of being tracked online.
+                    </p>
                 </div>
             </section>
         </main>
@@ -64,6 +55,5 @@
     <audio id="audioPlayer" preload="auto" style="display:none" autoplay></audio>
     <script src="https://cdn.jsdelivr.net/npm/music-metadata-browser/dist/music-metadata-browser.min.js"></script>
     <script src="js/main.js"></script>
-    <script src="js/quiz.js"></script>
 </body>
 </html>
