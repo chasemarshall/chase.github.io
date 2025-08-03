@@ -230,9 +230,7 @@ document.addEventListener('DOMContentLoaded', async function () {
         }
         audioPlayer.addEventListener('canplay', function () {
             audioPlayer.currentTime = initialState.time || 0;
-            if (initialState.isPlaying !== false) {
-                playTrack();
-            }
+            playTrack();
         }, { once: true });
     }
     const title = document.querySelector('h1');
