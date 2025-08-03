@@ -37,6 +37,10 @@ function restoreState() {
             volEl.value = audioPlayer.volume;
         }
     }
+    if (initialState.time !== undefined && initialState.timestamp && initialState.isPlaying) {
+        const elapsed = (Date.now() - initialState.timestamp) / 1000;
+        initialState.time = Math.max(0, initialState.time + elapsed);
+    }
     return initialState;
 }
 
@@ -46,7 +50,8 @@ function saveState() {
         track: currentTrack,
         time: audioPlayer.currentTime,
         volume: audioPlayer.volume,
-        isPlaying: isPlaying
+        isPlaying: isPlaying,
+        timestamp: Date.now()
     }));
 }
 
@@ -171,14 +176,15 @@ if (audioPlayer) {
     audioPlayer.addEventListener('pause', saveState);
 }
 window.addEventListener('beforeunload', saveState);
+document.addEventListener('visibilitychange', saveState);
 
 // Project links
 function openProject(projectId) {
     const projectUrls = {
-        'project1': 'https://github.com/chasemarshall/minimal-ui-kit',
+        'project1': 'https://github.com/chasemarshall/python-password-manager',
         'project2': 'https://github.com/chasemarshall/dotfiles',
-        'project3': 'https://github.com/chasemarshall/markdown-blog-engine',
-        'project4': 'https://github.com/chasemarshall/color-palette-generator'
+        'project3': 'https://github.com/chasemarshall/ticket-system',
+        'project4': 'https://github.com/chasemarshall/trash-pickup'
     };
     window.open(projectUrls[projectId], '_blank');
 }
