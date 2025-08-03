@@ -222,7 +222,8 @@ function openProject(projectId) {
         'project1': 'https://github.com/chasemarshall/python-password-manager',
         'project2': 'https://github.com/chasemarshall/dotfiles',
         'project3': 'https://github.com/chasemarshall/ticket-system',
-        'project4': 'https://github.com/chasemarshall/trash-pickup'
+        'project4': 'https://github.com/chasemarshall/trash-pickup',
+        'project5': 'https://github.com/chasemarshall/privacy-redirector'
     };
     window.open(projectUrls[projectId], '_blank');
 }
