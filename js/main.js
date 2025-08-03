@@ -5,10 +5,37 @@ let isPlaying = false;
 const audioPlayer = document.getElementById('audioPlayer');
 let initialState = {};
 
+function arrayBufferToBase64(buffer) {
+    let binary = '';
+    const bytes = new Uint8Array(buffer);
+    const len = bytes.byteLength;
+    for (let i = 0; i < len; i++) {
+        binary += String.fromCharCode(bytes[i]);
+    }
+    return window.btoa(binary);
+}
+
 async function loadPlaylist() {
     try {
         const response = await fetch('music/playlist.json');
         playlist = await response.json();
+        if (window.musicMetadata) {
+            await Promise.all(playlist.map(async track => {
+                if (!track.albumArt) {
+                    try {
+                        const res = await fetch(track.file);
+                        const blob = await res.blob();
+                        const metadata = await musicMetadata.parseBlob(blob);
+                        if (metadata.common.picture && metadata.common.picture.length) {
+                            const pic = metadata.common.picture[0];
+                            track.albumArt = `data:${pic.format};base64,${arrayBufferToBase64(pic.data)}`;
+                        }
+                    } catch (e) {
+                        // ignore metadata errors
+                    }
+                }
+            }));
+        }
     } catch (error) {
         if (document.getElementById('trackName')) {
             document.getElementById('trackName').textContent = 'playlist error';
